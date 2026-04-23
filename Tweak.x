@@ -1,8 +1,4 @@
 // All Codes are adapt from YTLite and uYouEnhanced + Some of my research
-#import <YouTubeHeader/_ASDisplayView.h>
-#import <YouTubeHeader/YTInlinePlayerBarContainerView.h>
-#import <YouTubeHeader/YTPlayerBarController.h>
-#import <YouTubeHeader/YTPlayerBarController.h>
 #import "Headers.h"
 
 // Navigation Bar
@@ -76,18 +72,6 @@
         self.subviews[1].hidden = YES;
     }
 }
-/*
-- (void)setShouldCenterNavBarTitleView:(BOOL)center {
-    if (IS_ENABLED(CenterYTLogo)) {
-        center = YES;
-    }
-    %orig(center);
-    [self alignCustomViewToCenterOfWindow];
-}
-- (BOOL)shouldCenterNavBarTitleView {
-    return IS_ENABLED(CenterYTLogo) ? YES : %orig;
-}
-*/
 %end
 
 // Hide Subbar
@@ -125,18 +109,9 @@
 
 - (void)didMoveToWindow {
     %orig;
-    if (IS_ENABLED(HideHoriShelf) && [self.accessibilityIdentifier isEqualToString:@"horizontal-video-shelf.view"]) {
-        self.hidden = YES;
-        [self removeFromSuperview];
-    }
-	if (IS_ENABLED(HideGenMusicShelf) && [self.accessibilityIdentifier isEqualToString:@"feed_nudge.view"]) {
-        self.hidden = YES;
-        [self removeFromSuperview];
-    }
-    if ([self.accessibilityIdentifier isEqualToString:@"id.reel_remix_button"]) {
-        self.hidden = YES;
-        [self removeFromSuperview];
-    }
+    if (IS_ENABLED(HideHoriShelf) && [self.accessibilityIdentifier isEqualToString:@"horizontal-video-shelf.view"]) self.hidden = YES;
+	if (IS_ENABLED(HideGenMusicShelf) && [self.accessibilityIdentifier isEqualToString:@"feed_nudge.view"]) self.hidden = YES;
+    if ([self.accessibilityIdentifier isEqualToString:@"id.reel_remix_button"]) self.hidden = YES;
 }
 
 %end
@@ -185,17 +160,6 @@
     return YES;
 }
 
-/*
-// Will disable this if this doesn't work
-- (void)layoutSubviews {
-	%orig;
-    [[self valueForKey:@"_previousButtonView"] setBackgroundColor:nil];
-    [[self valueForKey:@"_nextButtonView"] setBackgroundColor:nil];
-    [[self valueForKey:@"_seekBackwardAccessibilityButtonView"] setBackgroundColor:nil];
-    [[self valueForKey:@"_seekForwardAccessibilityButtonView"] setBackgroundColor:nil];
-    [[self valueForKey:@"_playPauseButton"] setBackgroundColor:nil];
-}
-*/
 %end
 
 
@@ -486,7 +450,7 @@
 %new
 - (void)turnOffCaptions {
     if ([self.view.superview isKindOfClass:NSClassFromString(@"YTWatchView")]) {
-        [self setActiveCaptionTrack:nil]; // will try this
+        [self setActiveCaptionTrack:nil]; // will try this - got removed
     }
 }
 %end

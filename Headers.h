@@ -1,31 +1,28 @@
-#import <YouTubeHeader/YTAlertView.h>
-#import <YouTubeHeader/YTIGuideResponse.h>
-#import <YouTubeHeader/YTIGuideResponseSupportedRenderers.h>
-#import <YouTubeHeader/YTIPivotBarSupportedRenderers.h>
-#import <YouTubeHeader/YTIPivotBarRenderer.h>
-#import <YouTubeHeader/YTIBrowseRequest.h>
-#import <YouTubeHeader/YTISectionListRenderer.h>
-#import <YouTubeHeader/YTQTMButton.h>
-#import <YouTubeHeader/YTIButtonRenderer.h>
-#import <YouTubeHeader/YTVideoQualitySwitchOriginalController.h>
-#import <YouTubeHeader/YTWatchController.h>
-#import <YouTubeHeader/YTPlayerOverlay.h>
-#import <YouTubeHeader/YTPlayerOverlayProvider.h>
-#import <YouTubeHeader/YTSettingsViewController.h>
-#import <YouTubeHeader/YTSettingsSectionItem.h>
-#import <YouTubeHeader/YTSettingsSectionItemManager.h>
-#import <YouTubeHeader/YTSettingsPickerViewController.h>
-#import <YouTubeHeader/YTUIUtils.h>
+// Perferences and headers
+// For Tweak.x
+#import <YouTubeHeader/_ASDisplayView.h>
+#import <YouTubeHeader/YTIIcon.h>
+#import <YouTubeHeader/YTRightNavigationButtons.h>
+#import <YouTubeHeader/YTNavigationBarTitleView.h>
+#import <YouTubeHeader/YTPlayerBarController.h>
+// #import <YouTubeHeader/YTPlayerViewController.h>
+// #import <YouTubeHeader/YTWatchController.h>
 #import <YouTubeHeader/YTIMenuConditionalServiceItemRenderer.h>
-#import <YouTubeHeader/YTToastResponderEvent.h>
-#import <YouTubeHeader/YTPageStyleController.h>
-#import <YouTubeHeader/ASCollectionElement.h>
-#import <YouTubeHeader/ASCollectionView.h>
-#import <YouTubeHeader/ELMNodeController.h>
-#import <YouTubeHeader/YTMainAppControlsOverlayView.h>
-#import <YouTubeHeader/YTMainAppVideoPlayerOverlayView.h>
+#import <YouTubeHeader/YTIPivotBarRenderer.h>
+#import <YouTubeHeader/YTPivotBarItemView.h>
+
+// For Settings.x
+#import <PSHeader/Misc.h>
+#import <YouTubeHeader/YTSettingsGroupData.h>
+#import <YouTubeHeader/YTSettingsPickerViewController.h>
+#import <YouTubeHeader/YTSettingsSectionItem.h>
+#import <YouTubeHeader/YTSearchableSettingsViewController.h>
+#import <YouTubeHeader/YTSettingsSectionItemManager.h>
+#import <YouTubeHeader/YTSettingsViewController.h>
+#import <YouTubeHeader/YTUIUtils.h>
 
 #define IS_ENABLED(k) [[NSUserDefaults standardUserDefaults] boolForKey:k]
+#define INTFORVAL(v) [[NSUserDefaults standardUserDefaults] integerForKey:v]
 #define YTPremiumLogo @"YouModYTPremiumLogo"
 #define HideYTLogo @"YouModHideYTLogo"
 #define CenterYTLogo @"YouModCenterYTLogo"
@@ -65,133 +62,14 @@
 #define HideCreateButton @"YouModHideCreateButton"
 #define HideSubscriptTab @"YouModHideSubscriptionsTab"
 
-
 @interface YTITopbarLogoRenderer : NSObject
 @property(readonly, nonatomic) YTIIcon *iconImage;
 @end
 
-@interface YTTouchFeedbackController : YTCollectionViewCell
-@property (nonatomic, strong, readwrite) UIColor *feedbackColor;
-@end
-
-@interface ABCSwitch : UIControl
-@property (nonatomic, strong, readwrite) UIColor *onTintColor;
-@end
-
-@interface YTSettingsCell ()
-- (void)setIndicatorIcon:(int)icon;
-- (void)setTitleDescription:(id)titleDescription;
-@end
-
-@interface YTSettingsSectionItemManager (Custom)
-- (YTSettingsSectionItem *)switchWithTitle:(NSString *)title key:(NSString *)key;
-- (YTSettingsSectionItem *)linkWithTitle:(NSString *)title description:(NSString *)description link:(NSString *)link;
-- (UIImage *)resizedImageNamed:(NSString *)iconName;
-@end
-
-@interface QTMButton : UIButton
-@end
-
-@interface YTLightweightQTMButton ()
-@property (nonatomic, assign, readwrite, getter=isShouldRaiseOnTouch) BOOL shouldRaiseOnTouch;
-@end
-
-@interface YTQTMButton ()
-@property (nonatomic, strong, readwrite) YTIButtonRenderer *buttonRenderer;
-- (void)setSizeWithPaddingAndInsets:(BOOL)sizeWithPaddingAndInsets;
-- (BOOL)yt_isVisible;
-@end
-
-@interface YTRightNavigationButtons : UIView
-@property (nonatomic, strong) YTQTMButton *notificationButton;
-@property (nonatomic, strong) YTQTMButton *searchButton;
-@end
-
-@interface YTSearchViewController : UIViewController
-@end
-
 @interface YTNavigationBarTitleView : UIView
-- (void)alignCustomViewToCenterOfWindow;
 @end
 
 @interface YTChipCloudCell : UICollectionViewCell
-@end
-
-@interface YTHeaderContentComboViewController : UIViewController
-- (void)refreshPivotBar;
-@end
-
-@interface YTPivotBarViewController : UIViewController
-@end
-
-@interface YTAppViewController : UIViewController
-@property (nonatomic, assign, readonly) YTPivotBarViewController *pivotBarViewController;
-- (void)hidePivotBar;
-- (void)showPivotBar;
-@end
-
-@interface YTPivotBarView : UIView
-- (void)selectItemWithPivotIdentifier:(id)pivotIndentifier;
-@end
-
-@interface YTPivotBarViewController ()
-@property (nonatomic, weak, readwrite) YTAppViewController *parentViewController;
-@property (nonatomic, copy, readwrite) NSString *selectedPivotIdentifier;
-- (YTPivotBarView *)pivotBarView;
-- (void)selectItemWithPivotIdentifier:(id)pivotIndentifier;
-@end
-
-@interface YTPivotBarItemView : UIView
-@property (nonatomic, strong, readwrite) YTIPivotBarItemRenderer *renderer;
-@property (nonatomic, weak, readwrite) YTPivotBarViewController *delegate;
-@property (nonatomic, strong, readwrite) YTQTMButton *navigationButton;
-- (void)manageTab:(UILongPressGestureRecognizer *)gesture;
-@end
-
-@interface YTScrollableNavigationController : UINavigationController
-@property (nonatomic, weak, readwrite) YTAppViewController *parentViewController;
-@end
-
-@interface YTTabsViewController : UIViewController
-@property (nonatomic, weak, readwrite) YTScrollableNavigationController *navigationController;
-@end
-
-@interface YTReelWatchRootViewController : UIViewController
-@property (nonatomic, weak, readwrite) YTScrollableNavigationController *navigationController;
-@end
-
-@interface YTReelWatchPlaybackOverlayView : UIView
-@end
-
-@interface YTReelContentView : UIView
-@property (nonatomic, assign, readonly) YTReelWatchPlaybackOverlayView *playbackOverlay;
-- (void)turnShortsOnlyModeOff:(UILongPressGestureRecognizer *)gesture;
-@end
-
-@interface YTEngagementPanelIdentifier : NSObject
-@property (nonatomic, copy, readonly) NSString *identifierString;
-@end
-
-@interface YTEngagementPanelHeaderView : UIView
-@property (nonatomic, assign, readonly) YTQTMButton *closeButton;
-@end
-
-@interface YTEngagementPanelContainerController : UIViewController
-@end
-
-@interface YTEngagementPanelNavigationController : UIViewController
-@property (nonatomic, weak, readwrite) YTEngagementPanelContainerController *parentViewController;
-@end
-
-@interface YTMainAppEngagementPanelViewController : UIViewController
-@property (nonatomic, weak, readwrite) YTEngagementPanelNavigationController *parentViewController;
-@end
-
-@interface YTEngagementPanelView : UIView
-@property (nonatomic, weak, readwrite) YTMainAppEngagementPanelViewController *resizeDelegate;
-@property (nonatomic, copy, readwrite) YTEngagementPanelIdentifier *panelIdentifier;
-@property (nonatomic, assign, readonly) YTEngagementPanelHeaderView *headerView;
-- (void)didTapCopyInfoButton:(UIButton *)sender;
 @end
 
 @interface YTPlayabilityResolutionUserActionUIController : NSObject
@@ -202,55 +80,6 @@
 - (void)confirmAlertDidPressConfirm;
 @end
 
-@interface YTReelPlayerButton : YTQTMButton // sus
-@end
-
-@interface ELMCellNode
-@end
-
-@interface _ASCollectionViewCell : UICollectionViewCell
-- (id)node;
-@end
-
-@interface YTAsyncCollectionView : UICollectionView
-- (void)removeCellsAtIndexPath:(NSIndexPath *)indexPath;
-@end
-
-@interface YTELMView : UIView
-@end
-
-@interface ASNodeAncestryEnumerator : NSEnumerator
-@property (atomic, assign, readonly) NSMutableArray *allObjects;
-@end
-
-@interface ASDisplayNode ()
-@property (nonatomic, assign, readonly) UIViewController *closestViewController;
-@property (atomic, assign, readonly) ASNodeAncestryEnumerator *supernodes;
-// @property (atomic, copy, readwrite) NSArray *yogaChildren;
-@property (atomic) CALayer *layer;
-@end
-
-@interface YTFormattedStringLabel : UILabel
-@end
-
-@interface YTActionSheetHeaderView : UIView
-- (void)showHeaderDivider;
-@end
-
-@interface YTActionSheetAction : NSObject
-+ (instancetype)actionWithTitle:(NSString *)title iconImage:(UIImage *)image style:(NSInteger)style handler:(void (^)(void))handler;
-+ (instancetype)actionWithTitle:(NSString *)title iconImage:(UIImage *)image secondaryIconImage:(UIImage *)secondaryIconImage accessibilityIdentifier:(NSString *)identifier handler:(void (^)(void))handler;
-+ (instancetype)actionWithTitle:(NSString *)title titleColor:(UIColor *)titleColor iconImage:(UIImage *)image iconColor:(UIColor *)iconColor disableAutomaticButtonColor:(BOOL)autoColor accessibilityIdentifier:(NSString *)identifier handler:(void (^)(void))handler;
-@end
-
-@interface YTDefaultSheetController : NSObject
-- (void)addAction:(YTActionSheetAction *)action;
-- (void)presentFromView:(UIView *)view animated:(BOOL)animated completion:(void(^)(void))completion;
-- (void)presentFromViewController:(UIViewController *)vc animated:(BOOL)animated completion:(void(^)(void))completion;
-- (void)dismissViewControllerAnimated:(BOOL)animated completion:(void(^)(void))completion;
-
-+ (instancetype)sheetControllerWithParentResponder:(id)parentResponder;
-+ (instancetype)sheetControllerWithParentResponder:(id)parentResponder forcedSheetStyle:(NSInteger)style;
-+ (instancetype)sheetControllerWithMessage:(NSString *)message delegate:(id)delegate parentResponder:(id)parentResponder;
-+ (instancetype)sheetControllerWithMessage:(NSString *)message subMessage:(NSString *)subMessage delegate:(id)delegate parentResponder:(id)parentResponder;
-@end
+// @interface YTPivotBarViewController : UIViewController
+// - (void)selectItemWithPivotIdentifier:(id)pivotIndentifier;
+// @end

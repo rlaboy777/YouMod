@@ -1,14 +1,5 @@
 // Settings.x
 // Thanks to the original codes from YTUHD by PoomSmart - https://github.com/PoomSmart/YTUHD/blob/0e735616fd8fc6546339da7fdc78466f16f23ffd/Settings.x
-
-#import <PSHeader/Misc.h>
-#import <YouTubeHeader/YTSettingsGroupData.h>
-#import <YouTubeHeader/YTSettingsPickerViewController.h>
-#import <YouTubeHeader/YTSettingsSectionItem.h>
-#import <YouTubeHeader/YTSearchableSettingsViewController.h>
-#import <YouTubeHeader/YTSettingsSectionItemManager.h>
-#import <YouTubeHeader/YTSettingsViewController.h>
-#import <YouTubeHeader/YTUIUtils.h>
 #import "Headers.h"
 
 #define TweakName @"YouMod"
