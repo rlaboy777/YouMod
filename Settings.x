@@ -291,18 +291,6 @@ NSBundle *YouModBundle() {
         }];
     [sectionItems addObject:feed];
 
-    // Remove ads
-    YTSettingsSectionItem *removeads = [YTSettingsSectionItemClass switchItemWithTitle:LOC(@"REMOVE_ADS")
-        titleDescription:LOC(@"REMOVE_ADS_DESC")
-        accessibilityIdentifier:nil
-        switchOn:IS_ENABLED(RemoveAds)
-        switchBlock:^BOOL (YTSettingsCell *cell, BOOL enabled) {
-            [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:RemoveAds];
-            return YES;
-        }
-        settingItemId:0];
-    [sectionItems addObject:removeads];
-
     // Hide Subbar
     YTSettingsSectionItem *hidesubbar = [YTSettingsSectionItemClass switchItemWithTitle:LOC(@"HIDE_SUBBAR")
         titleDescription:LOC(@"HIDE_SUBBAR_DESC")
@@ -985,18 +973,6 @@ NSBundle *YouModBundle() {
             return NO;
         }];
     [sectionItems addObject:miscell];
-
-    // Allows background playback
-    YTSettingsSectionItem *backgroundplayback = [YTSettingsSectionItemClass switchItemWithTitle:LOC(@"ALLOWS_BACKGROUND_PLAYBACK")
-        titleDescription:LOC(@"ALLOWS_BACKGROUND_PLAYBACK_DESC")
-        accessibilityIdentifier:nil
-        switchOn:IS_ENABLED(AllowsBackgroundPlayback)
-        switchBlock:^BOOL (YTSettingsCell *cell, BOOL enabled) {
-            [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:AllowsBackgroundPlayback];
-            return YES;
-        }
-        settingItemId:0];
-    [sectionItems addObject:backgroundplayback];
 
     // Try to disables Shorts PiP
     YTSettingsSectionItem *shortsPiP = [YTSettingsSectionItemClass switchItemWithTitle:LOC(@"DISABLES_SHORTS_PIP")

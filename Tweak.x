@@ -189,6 +189,7 @@ static BOOL isDarkMode(UIView *view) {
     if (IS_ENABLED(HideShortsSubscriptButton) && [self.accessibilityIdentifier isEqualToString:@"id.ui.shorts_paused_state.subscriptions_button"]) self.hidden = YES;
     if (IS_ENABLED(HideShortsLiveButton) && [self.accessibilityIdentifier isEqualToString:@"id.ui.shorts_paused_state.live_button"]) self.hidden = YES;
     if (IS_ENABLED(HideShortsToVideo) && [self.accessibilityIdentifier isEqualToString:@"id.reel_multi_format_link"]) self.hidden = YES;
+    if (([self.accessibilityIdentifier isEqualToString:@"eml.expandable_metadata.vpp"])) [self removeFromSuperview];
 }
 
 %end
@@ -270,7 +271,6 @@ static BOOL isDarkMode(UIView *view) {
 }
 %end
 
-%group Ads
 %hook YTPlayerResponse
 %new(@@:)
 - (NSMutableArray *)playerAdsArray { return [NSMutableArray array]; }
@@ -361,14 +361,6 @@ static BOOL isDarkMode(UIView *view) {
 - (void)playerOverlayProvider:(YTPlayerOverlayProvider *)provider didInsertPlayerOverlay:(YTPlayerOverlay *)overlay {
     if ([[overlay overlayIdentifier] isEqualToString:@"player_overlay_product_in_video"]) return;
     %orig;
-}
-%end
-
-%hook _ASDisplayView
-- (void)didMoveToWindow {
-    %orig;
-    if (([self.accessibilityIdentifier isEqualToString:@"eml.expandable_metadata.vpp"]))
-        [self removeFromSuperview];
 }
 %end
 
@@ -543,7 +535,6 @@ static BOOL isDarkMode(UIView *view) {
 
 %hook ELMPBShowBottomSheetCommand
 - (void)showMealbarPromoWithContainerView:(id)arg1 handler:(id)arg2 {}
-%end
 %end
 
 // Hide Subbar
@@ -882,7 +873,7 @@ static BOOL isDarkMode(UIView *view) {
 
 // Miscellaneous
 
-%group BackgroundPlayback
+// Background playback
 %hook YTIBackgroundOfflineSettingCategoryEntryRenderer
 %new(B@:)
 - (BOOL)isBackgroundEnabled { return YES; }
@@ -902,7 +893,6 @@ static BOOL isDarkMode(UIView *view) {
 
 %hook YTIPlayerResponse
 - (BOOL)isPlayableInBackground { return YES; }
-%end
 %end
 
 // Try to disable Shorts PiP
@@ -1273,12 +1263,6 @@ BOOL isTabSelected = NO;
     YTIDislikeResponseClass = %c(YTIDislikeResponse);
     YTIRemoveLikeResponseClass = %c(YTIRemoveLikeResponse);
     %init;
-    if (IS_ENABLED(RemoveAds)) {
-        %init(Ads);
-    }
-    if (IS_ENABLED(AllowsBackgroundPlayback)) {
-        %init(BackgroundPlayback);
-    }
     if (IS_ENABLED(OldQualityPicker)) {
         %init(OldVideoQuality);
     }

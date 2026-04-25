@@ -48,7 +48,6 @@
 #define HideCastButtonNav @"YouModHideCastButtonNavigationBar"
 #define HideiSponsorBlock @"YouModHideiSponsorBlockButton"
 // Feed
-#define RemoveAds @"YouModRemoveAdsAndPromotions"
 #define HideSubbar @"YouModHideSubbar"
 #define HideGenMusicShelf @"YouModHideGenMusicShelf"
 #define HideShortsShelf @"YouModHideShortsShelf"
@@ -104,7 +103,6 @@
 #define HideCreateButton @"YouModHideCreateButton"
 #define HideSubscriptTab @"YouModHideSubscriptionsTab"
 // Miscellaneous
-#define AllowsBackgroundPlayback @"YouModAllowsBackgroundPlayback"
 #define DisablesShortsPiP @"YouModTrytoDisablesShortsPiP"
 #define BlockUpgradeDialogs @"YouModBlockUpgradeDialogs"
 #define HideAreYouThereDialog @"YouModHideAreYouThereDialog"

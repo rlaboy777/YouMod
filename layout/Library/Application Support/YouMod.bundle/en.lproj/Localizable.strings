@@ -26,8 +26,6 @@
 "HIDE_ISPONSORBLOCK_DESC" = "Hide iSponsorBlock button from the navigation bar.";
 
 "FEED" = "Feed";
-"REMOVE_ADS" = "Remove ads";
-"REMOVE_ADS_DESC" = "Remove video advertisements and YouTube Premium promotions from videos and feed.";
 "HIDE_SUBBAR" = "Hide subbar";
 "HIDE_SUBBAR_DESC" = "Hide subbar at the top of the feed.";
 "HIDE_MUSIC_PLAYLISTS" = "Hide music playlist generator";
@@ -138,8 +136,6 @@
 "HIDE_SUBSCRIPT_TAB_DESC" = "Hide Subscriptions tab from the tab bar.";
 
 "MISCELLANEOUS" = "Miscellaneous";
-"ALLOWS_BACKGROUND_PLAYBACK" = "Allows background playback";
-"ALLOWS_BACKGROUND_PLAYBACK_DESC" = "Allows YouTube to play videos in the background.";
 "DISABLES_SHORTS_PIP" = "Disables Shorts PiP";
 "DISABLES_SHORTS_PIP_DESC" = "Try to disables Shorts PiP, this might not 100% disables it.";
 "BLOCK_UPGRADE_DIALOGS" = "Block upgrade dialogs";
