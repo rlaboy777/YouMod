@@ -23,7 +23,6 @@ static NSString *accessGroupID() {
     return accessGroup;
 }
 
-
 // YouTube-X (https://github.com/PoomSmart/YouTube-X)
 static BOOL isProductList(YTICommand *command) {
     if ([command respondsToSelector:@selector(yt_showEngagementPanelEndpoint)]) {
@@ -302,10 +301,6 @@ static BOOL isDarkMode(UIView *view) {
 - (void)decorateContext:(id)context {}
 %end
 
-%hook YTIPlayerResponse
-- (BOOL)isMonetized { return NO; }
-%end
-
 %hook YTLocalPlaybackController
 - (id)createAdsPlaybackCoordinator { return nil; }
 %end
@@ -376,15 +371,11 @@ static BOOL isDarkMode(UIView *view) {
 }
 %end
 
-%hook YTColdConfig
-- (BOOL)cxClientDisableMementoPromotions { return YES; }
-%end
-
+/*
 %hook YTHotConfig
-- (BOOL)iosPlayerClientSharedConfigShowPipClingPromo { return NO; }
 - (BOOL)liveChatEnableEngagementPanelPromo { return NO; }
-- (BOOL)livestreamClientConfigEnableCreationModesPromosTriggered { return NO; }
 %end
+*/
 
 // NoYTPremium - @PoomSmart https://github.com/PoomSmart/NoYTPremium
 // Alert
@@ -429,113 +420,6 @@ static BOOL isDarkMode(UIView *view) {
 // Survey
 %hook YTSurveyController
 - (void)showSurveyWithRenderer:(id)arg1 surveyParentResponder:(id)arg2 {}
-%end
-
-// Hide AI things
-%hook YTShortsSharedGalleryPresentationView
-- (BOOL)shouldShowAiMontageButton { return NO; }
-%end
-
-%hook YTShortsSharedGalleryPresentationViewController
-- (BOOL)shouldShowAiMontageButton { return NO; }
-%end
-
-%hook YTVideoSubtitleView
-- (BOOL)shouldShowAdBadge { return NO; }
-%end
-
-%hook YTIPlayerCompanionAdsSupportedRenderers
-- (BOOL)hasAppPromoCompanionAdRenderer { return NO; }
-%end
-
-%hook YTIRenderer
-- (id)appPromoAdCtaRenderer { return nil; }
-- (BOOL)hasAppPromoAdCtaRenderer { return NO; }
-%end
-
-%hook YTIInStreamPlayerCtaAdsSupportedRenderers
-- (BOOL)hasAppPromoAdCtaRenderer { return NO; }
-%end
-
-%hook YTInterstitialPromoViewController
-- (void)showInterstitialPromo:(id)arg1 enableClientImpressionThrottling:(BOOL)arg2 interstitialParentResponder:(id)arg3 {}
-- (void)showInterstitialPromo:(id)arg1 interstitialParentResponder:(id)arg2 {}
-%end
-
-%hook YTMealbarPromoController
-- (id)promoRenderer { return nil; }
-- (void)showMealbarPromoWithEvent:(id)arg {}
-%end
-
-%hook YTOfflineButtonPromoController
-- (void)showOfflinePromoWithRenderer:(id)arg1 endpoint:(id)arg2 parentResponder:(id)arg3 {}
-%end
-
-%hook YTOfflineButtonPromoView
-- (id)initWithFrame:(CGRect)arg1 renderer:(id)arg2 attributedView:(id)arg3 formattedStringLabelDelegate:(id)arg4 offlineButtonPromoDelegate:(id)arg5 { return nil; }
-%end
-
-%hook YTWatchMiniBarControlsView
-- (void)setTitle:(id)arg1 byline:(id)arg2 showingPaidPromotion:(BOOL)arg3 showingPremiumBadge:(BOOL)arg4 {}
-%end
-
-%hook MDXFeatureFlags
-- (BOOL)areMementoPromotionsEnabled { return NO; }
-%end
-
-%hook YTUserDefaults
-- (BOOL)enablePromoDebugToast { return NO; }
-- (BOOL)isPromoForced { return NO; }
-%end
-
-%hook YTAppMealbarPromoController
-- (id)mealbarPromoController { return nil; }
-%end
-
-%hook YTAppMealbarPromoControllerImpl
-- (id)mealbarPromoController { return nil; }
-%end
-
-%hook YTSurveyPromosheet
-- (id)expandablePromosheetDelegate { return nil; }
-- (void)setExpandablePromosheetDelegate:(id)arg {}
-%end
-
-%hook YTSPromotionServiceBlockImpl
-- (BOOL)createPromotion:(id)arg1 writer:(id)arg2 error:(NSError **)arg3 { return NO; }
-%end
-
-%hook YTSPromotionServiceBlock
-- (BOOL)createPromotion:(id)arg1 writer:(id)arg2 error:(NSError **)arg3 { return NO; }
-%end
-
-%hook YTPromosheetController
-- (BOOL)canPresentPromosheetWithGlobalThrottling:(BOOL)arg1 customizedThrottling:(id)arg2 shouldReplacePromosheet:(BOOL)arg3 { return NO; }
-- (void)setCurrentPromosheet:(id)arg {}
-%end
-
-%hook YTWatchSurveyTriggerController
-- (id)initWithParentResponder:(id)arg1 promosheetController:(id)arg2 { return nil; }
-%end
-
-%hook YTShareMainView
-- (BOOL)shouldShowPromo { return NO; }
-- (void)setPromoView:(id)arg {}
-%end
-
-%hook YCHLiveChatActionPanelView
-- (BOOL)shouldShowUpsellButton { return NO; }
-%end
-
-%hook YTPromosheetContainerView
-- (BOOL)shouldShowExpandButton { return NO; }
-- (void)setPromosheet:(id)arg {}
-- (void)setPromosheetDisplayed:(BOOL)arg {}
-- (void)setPromosheet:(id)arg1 animated:(BOOL)arg2 completion:(id)arg3 {}
-%end
-
-%hook ELMPBShowBottomSheetCommand
-- (void)showMealbarPromoWithContainerView:(id)arg1 handler:(id)arg2 {}
 %end
 
 // Hide Subbar
@@ -950,10 +834,7 @@ static BOOL isDarkMode(UIView *view) {
 // Fixes slow miniplayer
 %hook YTColdConfig
 - (BOOL)enableIosFloatingMiniplayerDoubleTapToResize { return IS_ENABLED(FixesSlowMiniPlayer) ? NO : %orig; }
-%end
-
 // Use old miniplayer
-%hook YTColdConfig
 - (BOOL)enableIosFloatingMiniplayer { return IS_ENABLED(DisablesNewMiniPlayer) ? NO : %orig; }
 %end
 
