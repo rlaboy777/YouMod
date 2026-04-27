@@ -175,25 +175,46 @@ static BOOL isDarkMode(UIView *view) {
 
 %hook YTCommonColorPalette
 - (UIColor *)baseBackground {
-    return IS_ENABLED(OLEDTheme) ? [UIColor blackColor] : %orig;
+    if (IS_ENABLED(OLEDTheme) && isDarkMode2) {
+        return [UIColor blackColor];
+    }
+    return %orig;
 }
 - (UIColor *)brandBackgroundSolid {
-    return IS_ENABLED(OLEDTheme) ? [UIColor blackColor] : %orig;
+    if (IS_ENABLED(OLEDTheme) && isDarkMode2) {
+        return [UIColor blackColor];
+    }
+    return %orig;
 }
 - (UIColor *)brandBackgroundPrimary {
-    return IS_ENABLED(OLEDTheme) ? [UIColor blackColor] : %orig;
+    if (IS_ENABLED(OLEDTheme) && isDarkMode2) {
+        return [UIColor blackColor];
+    }
+    return %orig;
 }
 - (UIColor *)brandBackgroundSecondary {
-    return IS_ENABLED(OLEDTheme) ? [[UIColor blackColor] colorWithAlphaComponent:0.9] : %orig;
+    if (IS_ENABLED(OLEDTheme) && isDarkMode2) {
+        return [[UIColor blackColor] colorWithAlphaComponent:0.9];
+    }
+    return %orig;
 }
 - (UIColor *)raisedBackground {
-    return IS_ENABLED(OLEDTheme) ? [UIColor blackColor] : %orig;
+    if (IS_ENABLED(OLEDTheme) && isDarkMode2) {
+        return [UIColor blackColor];
+    }
+    return %orig;
 }
 - (UIColor *)staticBrandBlack {
-    return IS_ENABLED(OLEDTheme) ? [UIColor blackColor] : %orig;
+    if (IS_ENABLED(OLEDTheme) && isDarkMode2) {
+        return [UIColor blackColor];
+    }
+    return %orig;
 }
 - (UIColor *)generalBackgroundA {
-    return IS_ENABLED(OLEDTheme) ? [UIColor blackColor] : %orig;
+    if (IS_ENABLED(OLEDTheme) && isDarkMode2) {
+        return [UIColor blackColor];
+    }
+    return %orig;
 }
 %end
 
