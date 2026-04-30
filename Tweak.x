@@ -1353,59 +1353,35 @@ BOOL isTabSelected = NO;
 %property (nonatomic, retain) UIPanGestureRecognizer *YouModPanGesture;
 %new
 - (void)YouModHandlePanGesture:(UIPanGestureRecognizer *)panGestureRecognizer {
-    static UIImpactFeedbackGenerator *feedbackGenerator;
     static float initialVolume;
     static float initialBrightness;
-    static BOOL isValidHorizontalPan = NO;
+    static BOOL isValidHorizontalPan = NO; 
     static GestureSection gestureSection = GestureSectionInvalid;
     static CGPoint startLocation;
     static CGFloat deadzoneStartingXTranslation;
     static CGFloat adjustedTranslationX;
     static CGFloat deadzoneRadius = 20.0;
     static CGFloat sensitivityFactor = 1.0;
+
     static MPVolumeView *volumeView;
     static UISlider *volumeViewSlider;
 
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        volumeView = [[MPVolumeView alloc] init];
+        volumeView = [[MPVolumeView alloc] initWithFrame:CGRectZero];
         for (UIView *view in volumeView.subviews) {
             if ([view isKindOfClass:[UISlider class]]) {
                 volumeViewSlider = (UISlider *)view;
                 break;
             }
         }
-        feedbackGenerator = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleMedium];
     });
 
-    // --- Helper Logic ---
-    void (^adjustBrightness)(CGFloat, CGFloat) = ^(CGFloat translationX, CGFloat initialB) {
-        float brightnessSensitivityFactor = 3.0;
-        float newBrightness = initialB + ((translationX / 1000.0) * sensitivityFactor * brightnessSensitivityFactor);
-        newBrightness = fmaxf(fminf(newBrightness, 1.0), 0.0);
-        [[UIScreen mainScreen] setBrightness:newBrightness];
-    };
-
-    void (^adjustVolume)(CGFloat, CGFloat) = ^(CGFloat translationX, CGFloat initialV) {
-        float volumeSensitivityFactor = 3.0;
-        float newVolume = initialV + ((translationX / 1000.0) * sensitivityFactor * volumeSensitivityFactor);
-        newVolume = fmaxf(fminf(newVolume, 1.0), 0.0);
-        
-        CGFloat currentVolume = [[AVAudioSession sharedInstance] outputVolume];
-        if (fabs(newVolume - currentVolume) < 0.01 && currentVolume > 0.01 && currentVolume < 0.99) return;
-        
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            volumeViewSlider.value = newVolume;
-        });
-    };
-
-    // --- Gesture State Handling ---
     if (panGestureRecognizer.state == UIGestureRecognizerStateBegan) {
         startLocation = [panGestureRecognizer locationInView:self.view];
-        CGFloat viewWidth = self.view.bounds.size.width;
+        CGFloat viewHeight = self.view.bounds.size.height;
 
-        // FIXED: Left = Brightness (Top enum), Right = Volume (Bottom enum)
-        if (startLocation.x <= viewWidth / 2.0) {
+        if (startLocation.y <= viewHeight / 2.0) {
             gestureSection = GestureSectionTop; 
         } else {
             gestureSection = GestureSectionBottom;
@@ -1418,7 +1394,6 @@ BOOL isTabSelected = NO;
         CGPoint translation = [panGestureRecognizer translationInView:self.view];
         
         if (!isValidHorizontalPan) {
-            // Predominantly horizontal check
             if (fabs(translation.x) > fabs(translation.y)) {
                 CGFloat distanceFromStart = hypot(translation.x, translation.y);
                 if (distanceFromStart < deadzoneRadius) return;
@@ -1426,16 +1401,10 @@ BOOL isTabSelected = NO;
                 isValidHorizontalPan = YES;
                 deadzoneStartingXTranslation = translation.x;
                 
-                // Initialize based on side
                 if (gestureSection == GestureSectionTop) {
                     initialBrightness = [UIScreen mainScreen].brightness;
                 } else {
                     initialVolume = [[AVAudioSession sharedInstance] outputVolume];
-                }
-
-                if (IS_ENABLED(@"playerGesturesHapticFeedback_enabled")) {
-                    [feedbackGenerator prepare];
-                    [feedbackGenerator impactOccurred];
                 }
             } else {
                 panGestureRecognizer.state = UIGestureRecognizerStateCancelled;
@@ -1446,10 +1415,15 @@ BOOL isTabSelected = NO;
         if (isValidHorizontalPan) {
             adjustedTranslationX = translation.x - deadzoneStartingXTranslation;
             
+            // Calculate delta based on screen width
+            float delta = (adjustedTranslationX / self.view.bounds.size.width) * sensitivityFactor;
+            
             if (gestureSection == GestureSectionTop) {
-                adjustBrightness(adjustedTranslationX, initialBrightness);
+                float newBrightness = fmaxf(fminf(initialBrightness + delta, 1.0), 0.0);
+                [[UIScreen mainScreen] setBrightness:newBrightness];
             } else if (gestureSection == GestureSectionBottom) {
-                adjustVolume(adjustedTranslationX, initialVolume);
+                float newVolume = fmaxf(fminf(initialVolume + delta, 1.0), 0.0);
+                volumeViewSlider.value = newVolume;
             }
         }
     }
