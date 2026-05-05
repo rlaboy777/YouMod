@@ -10,7 +10,7 @@ $(TWEAK_NAME)_FRAMEWORKS = UIKit Foundation Photos AVFoundation Security SystemC
 $(TWEAK_NAME)_CFLAGS = -fobjc-arc
 $(TWEAK_NAME)_FILES = $(wildcard Files/*.x)
 
-// FFmpegKit stuff
+# FFmpegKit stuff
 FFMPEGKIT_FRAMEWORK_DIR ?= Files/FFmpegKit/Frameworks
 FFMPEGKIT_FRAMEWORKS = ffmpegkit libavcodec libavdevice libavfilter libavformat libavutil libswresample libswscale
 
