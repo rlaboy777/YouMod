@@ -815,28 +815,17 @@ static void YouModAppendFFmpegKitSearchDirectory(NSMutableOrderedSet <NSString *
 
 static NSArray <NSString *> *YouModFFmpegKitSearchDirectories(void) {
     NSMutableOrderedSet <NSString *> *directories = [NSMutableOrderedSet orderedSet];
-    NSBundle *mainBundle = NSBundle.mainBundle;
-    NSString *resourcePath = mainBundle.resourcePath;
-    NSString *frameworksPath = mainBundle.privateFrameworksPath;
-    NSString *executableDirectory = mainBundle.executablePath.stringByDeletingLastPathComponent;
-
-    YouModAppendFFmpegKitSearchDirectory(directories, @"/Library/Frameworks");
-    YouModAppendFFmpegKitSearchDirectory(directories, frameworksPath);
-    YouModAppendFFmpegKitSearchDirectory(directories, [resourcePath stringByAppendingPathComponent:@"Frameworks"]);
-    YouModAppendFFmpegKitSearchDirectory(directories, [resourcePath stringByAppendingPathComponent:@"YouMod.bundle/Frameworks"]);
-    YouModAppendFFmpegKitSearchDirectory(directories, [executableDirectory stringByAppendingPathComponent:@"Frameworks"]);
-    YouModAppendFFmpegKitSearchDirectory(directories, [executableDirectory stringByAppendingPathComponent:@"YouMod.bundle/Frameworks"]);
-
-    NSString *bundlePath = [resourcePath stringByAppendingPathComponent:@"YouMod.bundle"];
-    NSBundle *youModBundle = [NSBundle bundleWithPath:bundlePath];
-    YouModAppendFFmpegKitSearchDirectory(directories, [youModBundle.resourcePath stringByAppendingPathComponent:@"Frameworks"]);
-
-    Dl_info imageInfo;
-    if (dladdr((const void *)&YouModFFmpegKitSearchDirectories, &imageInfo) && imageInfo.dli_fname) {
-        NSString *imageDirectory = [[NSString stringWithUTF8String:imageInfo.dli_fname] stringByDeletingLastPathComponent];
-        YouModAppendFFmpegKitSearchDirectory(directories, [imageDirectory stringByAppendingPathComponent:@"Frameworks"]);
-        YouModAppendFFmpegKitSearchDirectory(directories, [[imageDirectory stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"Frameworks"]);
+    
+    // Path to YouMod.bundle/Frameworks inside the main app bundle
+    NSString *bundlePath = [[NSBundle.mainBundle resourcePath] stringByAppendingPathComponent:@"YouMod.bundle"];
+    NSString *frameworksInsideBundle = [bundlePath stringByAppendingPathComponent:@"Frameworks"];
+    
+    // Safety check: only add if the directory actually exists
+    BOOL isDir = NO;
+    if ([[NSFileManager defaultManager] fileExistsAtPath:frameworksInsideBundle isDirectory:&isDir] && isDir) {
+        [directories addObject:frameworksInsideBundle];
     }
+
     return directories.array;
 }
 
@@ -882,14 +871,13 @@ static void YouModLoadFrameworkBinaryByInstallName(NSString *frameworkName, NSSt
 
 static void YouModLoadFFmpegKitIfNeeded(void) {
     static BOOL attempted = NO;
-    if (NSClassFromString(@"FFmpegKit")) {
-        YouModAppendFFmpegKitLoadEntry(@"FFmpegKit class already present before load");
-        return;
-    }
+    if (NSClassFromString(@"FFmpegKit")) return;
     if (attempted) return;
     attempted = YES;
-    YouModAppendFFmpegKitLoadEntry(@"begin FFmpegKit load");
 
+    YouModAppendFFmpegKitLoadEntry(@"[YouMod] Starting bundled FFmpegKit load...");
+
+    // Order is important: load dependencies (avutil, etc.) before the main toolkit
     NSArray <NSArray <NSString *> *> *frameworks = @[
         @[@"libavutil", @"libavutil"],
         @[@"libswresample", @"libswresample"],
@@ -902,25 +890,26 @@ static void YouModLoadFFmpegKitIfNeeded(void) {
         @[@"FFmpegKit", @"FFmpegKit"],
     ];
 
-    for (NSString *directory in YouModFFmpegKitSearchDirectories()) {
-        YouModAppendFFmpegKitLoadEntry(@"search directory %@ exists=%@", directory, [NSFileManager.defaultManager fileExistsAtPath:directory] ? @"YES" : @"NO");
+    NSArray *searchDirs = YouModFFmpegKitSearchDirectories();
+    if (searchDirs.count == 0) {
+        YouModAppendFFmpegKitLoadEntry(@"[YouMod] Error: Bundled Frameworks directory not found.");
+        return;
+    }
+
+    // Only iterate through our controlled bundle directory
+    for (NSString *directory in searchDirs) {
         for (NSArray <NSString *> *framework in frameworks) {
+            // This helper uses dlopen on the direct path within our bundle
             YouModLoadFrameworkBinary(directory, framework.firstObject, framework.lastObject);
         }
+        
         if (NSClassFromString(@"FFmpegKit")) {
-            YouModAppendFFmpegKitLoadEntry(@"FFmpegKit class became available from %@", directory);
+            YouModAppendFFmpegKitLoadEntry(@"[YouMod] Success: FFmpegKit loaded from bundle.");
             return;
         }
     }
 
-    for (NSArray <NSString *> *framework in frameworks) {
-        YouModLoadFrameworkBinaryByInstallName(framework.firstObject, framework.lastObject);
-        if (NSClassFromString(@"FFmpegKit")) {
-            YouModAppendFFmpegKitLoadEntry(@"FFmpegKit class became available from dyld install name");
-            return;
-        }
-    }
-    YouModAppendFFmpegKitLoadEntry(@"FFmpegKit class was not available after load attempts");
+    YouModAppendFFmpegKitLoadEntry(@"[YouMod] Critical: FFmpegKit could not be found in YouMod.bundle.");
 }
 
 static Class YouModFFmpegKitClass(void) {

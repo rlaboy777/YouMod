@@ -22,8 +22,6 @@ $(TWEAK_NAME)_LDFLAGS += -Wl,-rpath,/Library/Frameworks -Wl,-rpath,@loader_path/
 $(TWEAK_NAME)_LDFLAGS += $(foreach framework,$(FFMPEGKIT_FRAMEWORKS),-framework $(framework))
 
 after-stage::
-	mkdir -p "$(THEOS_STAGING_DIR)/Library/Frameworks"
-	rsync -a "$(FFMPEGKIT_FRAMEWORK_DIR)/" "$(THEOS_STAGING_DIR)/Library/Frameworks/"
 	mkdir -p "$(THEOS_STAGING_DIR)/Library/Application Support/YouMod.bundle/Frameworks"
 	rsync -a "$(FFMPEGKIT_FRAMEWORK_DIR)/" "$(THEOS_STAGING_DIR)/Library/Application Support/YouMod.bundle/Frameworks/"
 endif
