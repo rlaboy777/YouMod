@@ -69,7 +69,7 @@ static NSString *GetCacheSize() { // YTLite - @dayanch96
     if (self.type != 1 || class_getClassMethod(objc_getClass("YTSettingsGroupData"), @selector(tweaks))) {
         return %orig;
     }
-    NSMutableArray *temp = %orig;
+    NSArray *temp = %orig;
     NSMutableArray *mutableCategories = temp.mutableCopy;
     [mutableCategories insertObject:@(TweakSection) atIndex:0];
     return mutableCategories.copy;
