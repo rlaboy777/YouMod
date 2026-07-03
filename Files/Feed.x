@@ -51,7 +51,10 @@ static NSMutableArray <YTIItemSectionRenderer *> *filteredArray(NSArray <YTIItem
 
 %hook YTHeaderContentComboView
 - (void)enableSubheaderBarWithView:(id)arg1 { if (!IS_ENABLED(HideSubbar)) %orig; }
-- (void)setFeedHeaderScrollMode:(int)arg1 { IS_ENABLED(HideSubbar) ? %orig(0) : %orig; }
+- (void)setFeedHeaderScrollMode:(int)arg1 {
+    int temp = 0; 
+    IS_ENABLED(HideSubbar) ? %orig(temp) : %orig;
+}
 %end
 
 %hook YTChipCloudCell

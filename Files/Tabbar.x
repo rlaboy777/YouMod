@@ -30,8 +30,14 @@
 
 // Hide Tab Bar Indicators
 %hook YTPivotBarIndicatorView
-- (void)setFillColor:(id)arg1 { IS_ENABLED(HideTabIndi) ? %orig([UIColor clearColor]) : %orig; }
-- (void)setBorderColor:(id)arg1  { IS_ENABLED(HideTabIndi) ? %orig([UIColor clearColor]) : %orig; }
+- (void)setFillColor:(UIColor *)arg1 {
+    UIColor *temp = [UIColor clearColor];
+    IS_ENABLED(HideTabIndi) ? %orig(temp) : %orig;
+}
+- (void)setBorderColor:(UIColor *)arg1 {
+    UIColor *temp = [UIColor clearColor]; 
+    IS_ENABLED(HideTabIndi) ? %orig(temp) : %orig;
+}
 %end
 
 // Hide Tab Labels

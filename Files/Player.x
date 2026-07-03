@@ -39,15 +39,23 @@ static void YouModAddEndTime(YTPlayerViewController *self, YTSingleVideoControll
 - (void)setAutoplaySwitchButtonRenderer:(id)arg1 { if (!IS_ENABLED(HideAutoPlayToggle)) %orig; }
 // Hide captions Button
 - (void)setClosedCaptionsOrSubtitlesButtonAvailable:(BOOL)arg1 { if (!IS_ENABLED(HideCaptionsButton)) %orig; }
-- (void)setPreviousButtonHidden:(BOOL)arg { IS_ENABLED(HidePrevButton) ? %orig(YES) : %orig; }
-- (void)setNextButtonHidden:(BOOL)arg { IS_ENABLED(HideNextButton) ? %orig(YES) : %orig; }
+- (void)setPreviousButtonHidden:(BOOL)arg {
+    BOOL temp = YES;
+    IS_ENABLED(HidePrevButton) ? %orig(temp) : %orig;
+}
+- (void)setNextButtonHidden:(BOOL)arg { 
+    BOOL temp = YES;
+    IS_ENABLED(HideNextButton) ? %orig(temp) : %orig;
+}
 // Hide video title in full screen
 - (BOOL)titleViewHidden { return IS_ENABLED(HideFullvidTitle) ? YES : %orig; }
 %end
 
 %hook YTAutonavEndscreenController
 - (void)showEndscreen { if (!IS_ENABLED(HideSuggestedVideo)) %orig; }
-- (void)showEndscreenControlsInPlayerBar:(BOOL)arg { IS_ENABLED(HideSuggestedVideo) ? %orig(NO) : %orig; }
+- (void)showEndscreenControlsInPlayerBar:(BOOL)arg { 
+    BOOL temp = NO;
+    IS_ENABLED(HideSuggestedVideo) ? %orig(temp) : %orig; }
 %end
 
 %hook YTSettings
@@ -78,7 +86,10 @@ static void YouModAddEndTime(YTPlayerViewController *self, YTSingleVideoControll
 - (void)setBackgroundVisible:(BOOL)arg1 isGradientBackground:(BOOL)arg2 { IS_ENABLED(RemoveDarkOverlay) ? %orig(NO, arg2) : %orig; }
 // Hide Watermarks
 - (BOOL)isWatermarkEnabled { return IS_ENABLED(HideWaterMark) ? NO : %orig; }
-- (void)setWatermarkEnabled:(BOOL)arg { IS_ENABLED(HideWaterMark) ? %orig(NO) : %orig; }
+- (void)setWatermarkEnabled:(BOOL)arg { 
+    BOOL temp = NO;
+    IS_ENABLED(HideWaterMark) ? %orig(temp) : %orig;
+}
 - (void)layoutSubviews {
     %orig;
     if (IS_ENABLED(HideCastButtonPlayer)) self.playbackRouteButton.hidden = YES;    
@@ -88,8 +99,14 @@ static void YouModAddEndTime(YTPlayerViewController *self, YTSingleVideoControll
 
 // No Endscreen Cards
 %hook YTCreatorEndscreenView
-- (void)setHidden:(BOOL)arg1 { IS_ENABLED(HideEndScreenCards) ? %orig(YES) : %orig; }
-- (void)setHoverCardHidden:(BOOL)arg { IS_ENABLED(HideEndScreenCards) ? %orig(YES) : %orig; }
+- (void)setHidden:(BOOL)arg1 { 
+    BOOL temp = YES;
+    IS_ENABLED(HideEndScreenCards) ? %orig(temp) : %orig;
+}
+- (void)setHoverCardHidden:(BOOL)arg {
+    BOOL temp = YES;
+    IS_ENABLED(HideEndScreenCards) ? %orig(temp) : %orig;
+}
 - (void)setHoverCardRenderer:(id)arg { if (!IS_ENABLED(HideEndScreenCards)) %orig; }
 %end
 
@@ -127,12 +144,15 @@ static void YouModAddEndTime(YTPlayerViewController *self, YTSingleVideoControll
 
 // Disable toggle time remaining - @bhackel
 %hook YTInlinePlayerBarContainerView
-- (void)setShouldDisplayTimeRemaining:(BOOL)arg1 { 
+- (void)setShouldDisplayTimeRemaining:(BOOL)arg1 {
+    BOOL temp;
     if (IS_ENABLED(DisablesShowRemaining)) {
-        %orig(NO);
+        temp = NO;
+        %orig(temp);
         return;
     }
-    IS_ENABLED(AlwaysShowRemaining) ? %orig(YES) : %orig;
+    temp = YES;
+    IS_ENABLED(AlwaysShowRemaining) ? %orig(temp) : %orig;
 }
 %end
 
@@ -166,7 +186,10 @@ static void YouModAddEndTime(YTPlayerViewController *self, YTSingleVideoControll
 
 // Disable Autoplay 
 %hook YTPlaybackConfig
-- (void)setStartPlayback:(BOOL)arg1 { IS_ENABLED(StopAutoplayVideo) ? %orig(NO) : %orig; }
+- (void)setStartPlayback:(BOOL)arg1 {
+    BOOL temp = NO;
+    IS_ENABLED(StopAutoplayVideo) ? %orig(temp) : %orig;
+}
 %end
 
 // Skip Content Warning (https://github.com/qnblackcat/uYouPlus/blob/main/uYouPlus.xm#L452-L454)
@@ -180,7 +203,9 @@ static void YouModAddEndTime(YTPlayerViewController *self, YTSingleVideoControll
 
 // Always show seekbar
 %hook YTInlinePlayerBarContainerView
-- (void)setPlayerBarAlpha:(CGFloat)alpha { IS_ENABLED(AlwaysShowSeekbar) ? %orig(1.0) : %orig; }
+- (void)setPlayerBarAlpha:(CGFloat)alpha {
+    CGFloat temp = 1.0;
+    IS_ENABLED(AlwaysShowSeekbar) ? %orig(temp) : %orig; }
 %end
 
 // Portrait Fullscreen
@@ -297,17 +322,26 @@ static void YouModAddEndTime(YTPlayerViewController *self, YTSingleVideoControll
 // Disable Hints
 %hook YTSettings
 - (BOOL)areHintsDisabled { return IS_ENABLED(DisableHints) ? YES : %orig; }
-- (void)setHintsDisabled:(BOOL)arg1 { IS_ENABLED(DisableHints) ? %orig(YES) : %orig; }
+- (void)setHintsDisabled:(BOOL)arg1 {
+    BOOL temp = YES;
+    IS_ENABLED(DisableHints) ? %orig(temp) : %orig;
+}
 %end
 
 %hook YTSettingsImpl
 - (BOOL)areHintsDisabled { return IS_ENABLED(DisableHints) ? YES : %orig; }
-- (void)setHintsDisabled:(BOOL)arg1 { IS_ENABLED(DisableHints) ? %orig(YES) : %orig; }
+- (void)setHintsDisabled:(BOOL)arg1 {
+    BOOL temp = YES;
+    IS_ENABLED(DisableHints) ? %orig(temp) : %orig;
+}
 %end
 
 %hook YTUserDefaults
 - (BOOL)areHintsDisabled { return IS_ENABLED(DisableHints) ? YES : %orig; }
-- (void)setHintsDisabled:(BOOL)arg1 { IS_ENABLED(DisableHints) ? %orig(YES) : %orig; }
+- (void)setHintsDisabled:(BOOL)arg1 {
+    BOOL temp = YES;
+    IS_ENABLED(DisableHints) ? %orig(temp) : %orig;
+}
 %end
 
 %hook YTPlayerViewController

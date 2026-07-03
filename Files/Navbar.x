@@ -15,7 +15,10 @@
     %orig(renderer);
 }
 // For when spoofing before 18.34.5
-- (void)setPremiumLogo:(BOOL)arg { IS_ENABLED(YTPremiumLogo) ? %orig(YES) : %orig; }
+- (void)setPremiumLogo:(BOOL)arg {
+    BOOL temp = YES; 
+    IS_ENABLED(YTPremiumLogo) ? %orig(temp) : %orig;
+}
 - (BOOL)isPremiumLogo { return IS_ENABLED(YTPremiumLogo) ? YES : %orig; }
 %end
 
@@ -33,7 +36,10 @@
     %orig(renderer);
 }
 // For when spoofing before 18.34.5
-- (void)setPremiumLogo:(BOOL)arg { IS_ENABLED(YTPremiumLogo) ? %orig(YES) : %orig; }
+- (void)setPremiumLogo:(BOOL)arg {
+    BOOL temp = YES; 
+    IS_ENABLED(YTPremiumLogo) ? %orig(temp) : %orig;
+}
 - (BOOL)isPremiumLogo { return IS_ENABLED(YTPremiumLogo) ? YES : %orig; }
 %end
 
